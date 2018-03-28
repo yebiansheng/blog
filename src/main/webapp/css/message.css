@@ -1,0 +1,12 @@
+.col2{
+    width: 20%;
+    float: left;
+    height: 100px;
+    background-color: #0C0C0C;
+}
+.col6{
+    width: 60%;
+    float: left;
+    height: 100px;
+    background-color: red;
+}

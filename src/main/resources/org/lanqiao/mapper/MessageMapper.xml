@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.MessageMapper">
+  <resultMap id="MsgResultMap" type="org.lanqiao.entity.Message">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="praise" jdbcType="INTEGER" property="praise" />
+    <result column="words" jdbcType="VARCHAR" property="words" />
+    <result column="article_id" jdbcType="INTEGER" property="article_id" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <association  property="user"  resultMap="MsgUserResultMap" />
+  </resultMap>
+  <resultMap id="MsgUserResultMap" type="org.lanqiao.entity.User">
+  	<id column="userid" jdbcType="INTEGER" property="id" />
+    <result column="userName" jdbcType="VARCHAR" property="name" />
+    <result column="head_url" jdbcType="VARCHAR" property="head_url" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, praise, words, user_id, article_id
+  </sql>
+  
+  <select id="getAllMsg"  resultMap="MsgResultMap">
+  	SELECT m.*,u.`name` as userName from message m,`user` u where m.user_id=u.id;
+  </select>
+  <select id="getNoArtMsgByPage"  resultMap="MsgResultMap">
+  	SELECT m.*,u.id as userid,u.`name` as userName,u.head_url from message m,`user` u where m.user_id=u.id and article_id is null ORDER BY m.praise desc,m.id asc limit #{0},#{1};
+  </select>
+  <select id="getNoArtMsgNum"  resultType="java.lang.Integer">
+  	SELECT count(*) from message m,`user` u where m.user_id=u.id and article_id is null;
+  </select>
+  
+  <select id="getMsgByArtIdPage"  resultMap="MsgResultMap">
+  	SELECT m.*,u.id as userid,u.`name` as userName,u.head_url from message m,`user` u where m.user_id=u.id and m.article_id=#{2} ORDER BY m.praise desc,m.id asc limit #{0},#{1};
+  </select>
+  <select id="getMsgNumByArtId"  resultType="java.lang.Integer">
+  	SELECT count(*) from message m,`user` u where m.user_id=u.id and m.article_id=#{0};
+  </select>
+  
+   <insert id="insertMsg" parameterType="org.lanqiao.entity.Message">
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="praise != null">
+        praise,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="words != null">
+        words,
+      </if>
+      <if test="article_id != null">
+        article_id,
+      </if>
+      <if test="user.id != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="praise != null">
+        #{praise,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="words != null">
+        #{words,jdbcType=VARCHAR},
+      </if>
+      <if test="article_id != null">
+        #{article_id,jdbcType=INTEGER},
+      </if>
+      <if test="user.id != null">
+        #{user.id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

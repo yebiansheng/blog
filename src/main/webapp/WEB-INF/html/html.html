@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>个人博客模板古典系列之――江南墨卷</title>
+    <meta name="keywords" content="个人博客模板古典系列之――江南墨卷" />
+    <meta name="description" content="个人博客模板古典系列之――江南墨卷" />
+    <link rel="icon" href="images/icon.ico" type="image/x-icon" />
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/modernizr.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#send').click(function(){
+                $("#content").html(editor.txt.html());
+            });
+            $('#save').click(function(){
+                $.ajax({
+                    url: 'insertArticle',
+                    type: 'POST',
+                    data:{
+                        "title":$("#title").val(),
+                    	"content":editor.txt.html(),
+                        "user_id":2,
+                        "sort_id":2
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data){
+                        alert(data.status);
+
+                    }
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <div class="headtop"></div>
+        <div class="contenttop">
+            <div class="logo f_l" style="margin-left: -30px;margin-bottom: -20px;margin-top: -25px"><img src="images/title.png"/></div>
+            <div class="search f_r">
+                <form action="/e/search/index.php" method="post" name="searchform" id="searchform">
+                    <input name="keyboard" id="keyboard" class="input_text" value="请输入关键字" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字'}" type="text">
+                    <input name="show" value="title" type="hidden">
+                    <input name="tempid" value="1" type="hidden">
+                    <input name="tbname" value="news" type="hidden">
+                    <input name="Submit" class="input_submit" value="搜索" type="submit">
+                </form>
+            </div>
+            <div class="blank"></div>
+            <nav>
+                <div  class="navigation">
+                    <ul class="menu">
+                        <li><a href="index">网站首页</a></li>
+                        <li><a href="#">关于我</a>
+                            <ul>
+                                <li><a href="about">个人简介</a></li>
+                                <li><a href="listpic">个人相册</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">我的日记</a>
+                            <ul>
+                                <li><a href="newslistpic">个人日记</a></li>
+                                <li><a href="newslistpic">学习笔记</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="newslistpic">技术文章</a> </li>
+                        <li><a href="message">给我留言</a> </li>
+                    </ul>
+                </div>
+            </nav>
+            <SCRIPT type=text/javascript>
+                // Navigation Menu
+                $(function() {
+                    $(".menu ul").css({display: "none"}); // Opera Fix
+                    $(".menu li").hover(function(){
+                        $(this).find('ul:first').css({visibility: "visible",display: "none"}).slideDown("normal");
+                    },function(){
+                        $(this).find('ul:first').css({visibility: "hidden"});
+                    });
+                });
+            </SCRIPT>
+        </div>
+    </header>
+    <div class="container">
+        <div class="con_content">
+            <div class="about_box">
+                <h2 class="nh1"><span>您现在的位置是：<a href="/" target="_blank">网站首页</a>>><a href="#" target="_blank">发博文</a></span><b>发博文</b></h2>
+               	<span style="font-size:18px;color:black">标题：</span><input id="title" type="text" style="width:350px; height:25px"/>
+                <span style="font-size:18px;color:black">文章类别：</span>
+                <select>
+                	<option value="1">日记</option>
+                    <option value="2">技术</option>
+                </select>
+                <div id="editor" style="background-color:#ffffff" ></div>
+                <div id="content"></div>
+                <button id="send" type="button">发表</button>
+                <button id="save" type="button">保存</button>
+            </div>
+        </div>
+        <div class="blank"></div>
+        <!-- container代码 结束 -->
+
+        <footer>
+            <div class="footer">
+                <div class="f_l">
+                    <p>All Rights Reserved 版权所有：<a href="http://www.yangqq.com">杨青个人博客</a> 备案号：蜀ICP备00000000号</p>
+                </div>
+                <div class="f_r textr">
+                    <p>Design by DanceSmile</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+<script type="text/javascript" src="js/wangEditor.js"></script>
+<script type="text/javascript">
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+
+    // 或者 var editor = new E( document.getElementById('editor') )
+    //editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+    //editor.customConfig.uploadImgServer = 'upload';  // 上传图片到服务器
+ 	editor.customConfig.zIndex = 1000000;
+    editor.customConfig.customUploadImg = function (files, insert) {
+        // files 是 input 中选中的文件列表
+        var img=files[0];
+        var imgUrl;
+        var reader = new FileReader();
+        reader.readAsDataURL(img);
+        reader.onload = function(e){
+            var res = this.result;
+            $("#Img").attr("src", res);
+            $.ajax({
+                url: 'upload',
+                type: 'POST',
+                data:{
+                    "img":res
+                },
+                dataType: 'json',
+                cache: false,
+                success: function(data){
+                    var imgUrl=data.imgUrl;
+                    insert(imgUrl);
+
+                }
+            });
+        }
+
+        /* $.ajax({
+         url: 'upload',
+         type: 'POST',
+         data:{
+         "img":reader.result
+         },
+         dataType: 'json',
+         cache: false,
+         success: function(data){
+         var imgUrl=data.imgUrl;
+         insert(imgUrl);
+
+         }
+         });  */
+        // insert 是获取图片 url 后，插入到编辑器的方法
+        // 上传代码返回结果之后，将图片插入到编辑器中
+    }
+    editor.create();
+</script>
+</html>

@@ -1,0 +1,10 @@
+#content{
+    background-image:url('../images/loginBg.jpg');
+    background-size:cover;
+}
+#login_div{
+    background-color: white;
+    width: 400px;
+    height: 250px;
+    background-color: rgba(0, 0, 0, 0.4);
+}

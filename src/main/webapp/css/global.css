@@ -1,0 +1,28 @@
+body, div, p, ul, li, dd, dl, dt, hr, i, h1, h2, h3, h4, h5, h6, iframe {
+    padding: 0;
+    margin: 0;
+}
+
+ul, ol {
+     list-style: none
+ }
+
+img {
+    border: 0;
+    vertical-align: middle
+}
+
+body {
+    font: 12px/150% Arial, Verdana, "\5b8b\4f53";
+    color: #666;
+    background: #fff
+}
+
+a {
+    color: #666;
+    text-decoration: none
+}
+
+a:hover {
+    color: #C81623
+}

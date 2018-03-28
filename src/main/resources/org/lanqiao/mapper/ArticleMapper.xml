@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.ArticleMapper">
+  <resultMap id="ArticleResultMap" type="org.lanqiao.entity.Article">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="page_view" jdbcType="INTEGER" property="page_view" />
+    <result column="sort_id" jdbcType="INTEGER" property="sort_id" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <association property="user"  resultMap="UserResultMap" />
+    <collection property="msgList" resultMap="MsgResultMap" />
+  </resultMap>
+  <resultMap id="UserResultMap" type="org.lanqiao.entity.User">
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <resultMap id="MsgResultMap" type="org.lanqiao.entity.Message">
+    <id column="msgId" jdbcType="INTEGER" property="id" />
+    <result column="praise" jdbcType="INTEGER" property="praise" />
+    <result column="words" jdbcType="VARCHAR" property="words" />
+    <result column="msgDate" jdbcType="TIMESTAMP" property="date" />
+    <association property="user"  resultMap="MsgUserResultMap" />
+  </resultMap>
+  <resultMap id="MsgUserResultMap" type="org.lanqiao.entity.User">
+    <result column="msgUserName" jdbcType="VARCHAR" property="name" />
+    <result column="head_url" jdbcType="VARCHAR" property="head_url" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, date, content, page_view, sort_id, image, user_id
+  </sql>
+  
+  
+  <select id="getAllArticle"  resultMap="ArticleResultMap">
+   SELECT zh.*,u.`name` as msgUserName from (select a.*,u.`name`,m.id as msgId,m.praise,m.words,m.user_id as msgUserId from article a,`user` u,message m where a.user_id=u.id and a.id=m.article_id) zh,`user` u where zh.msgUserId=u.id;
+  </select>
+  <select id="getSimpleArticleByPage" parameterType="java.lang.Integer"  resultMap="ArticleResultMap">
+	select a.*,u.`name`  from article a,`user` u where a.user_id=u.id limit #{0},#{1}
+  </select>
+  <select id="getArticleById" parameterType="java.lang.Integer" resultMap="ArticleResultMap">
+ 	select a.*,u.`name` from article a,`user` u where a.id=#{0} and a.user_id=u.id;
+  </select>
+  <select id="getArticleAndMsgById" parameterType="java.lang.Integer" resultMap="ArticleResultMap">
+  	  	SELECT zh.*,u.`name` as msgUserName,u.head_url from (select a.*,u.`name`,m.id as msgId,m.praise,m.words,m.user_id as msgUserId,m.date as msgDate from article a,`user` u,message m where a.id=#{0} and a.user_id=u.id and a.id=m.article_id) zh,`user` u where zh.msgUserId=u.id ORDER BY zh.praise desc,zh.msgId asc limit 0,10;
+  </select>
+  <select id="getTopTenArticle" resultMap="ArticleResultMap">
+  	SELECT id,title from article ORDER BY page_view DESC LIMIT 0,10;
+  </select>
+  <select id="getArticleNum" resultType="java.lang.Integer">
+	SELECT COUNT(*) from article;  
+  </select>
+    	
+  <select id="searchSimpleArticleByPage" parameterType="hashmap" resultMap="ArticleResultMap">
+	select a.*,u.`name`  from article a,`user` u where a.user_id=u.id and title like #{title} limit #{start},#{size}
+  </select>
+  <select id="searchSimpleArticleNum" parameterType="hashmap" resultMap="ArticleResultMap">
+	select a.*,u.`name`  from article a,`user` u where a.user_id=u.id and title like #{title}
+  </select>
+ 
+  <select id="getSimpleDiaryByPage" parameterType="hashmap" resultMap="ArticleResultMap">
+	select a.*  from article a where a.sort_id=#{id} limit #{start},#{size}
+  </select>
+  <select id="getSimpleDiaryNum" parameterType="hashmap" resultType="java.lang.Integer">
+	select count(*)  from article a where a.sort_id=#{id}
+  </select>
+ 
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ArticleResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.lanqiao.entity.Article">
+    insert into article (id, title, date, 
+      content, page_view, sort_id, 
+      image, user_id)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=VARCHAR}, #{page_view,jdbcType=INTEGER}, #{sort_id,jdbcType=INTEGER}, 
+      #{image,jdbcType=VARCHAR}, #{user_id,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.lanqiao.entity.Article">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="page_view != null">
+        page_view,
+      </if>
+      <if test="sort_id != null">
+        sort_id,
+      </if>
+      <if test="image != null">
+        image,
+      </if>
+      <if test="user.id != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="page_view != null">
+        #{page_view,jdbcType=INTEGER},
+      </if>
+      <if test="sort_id != null">
+        #{sort_id,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="user.id != null">
+        #{user.id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.lanqiao.entity.Article">
+    update article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="page_view != null">
+        page_view = #{page_view,jdbcType=INTEGER},
+      </if>
+      <if test="sort_id != null">
+        sort_id = #{sort_id,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null">
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.lanqiao.entity.Article">
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      date = #{date,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=VARCHAR},
+      page_view = #{page_view,jdbcType=INTEGER},
+      sort_id = #{sort_id,jdbcType=INTEGER},
+      image = #{image,jdbcType=VARCHAR},
+      user_id = #{user_id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePageViewAdd" parameterType="java.lang.Integer" >
+  	UPDATE article set page_view=page_view+1 WHERE id=#{0};
+  </update>
+</mapper>

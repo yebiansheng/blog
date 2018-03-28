@@ -1,0 +1,23 @@
+package org.lanqiao.dao;
+
+import java.util.List;
+
+import org.lanqiao.entity.Recommend;
+
+public interface RecommendMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Recommend record);
+
+    int insertSelective(Recommend record);
+
+    Recommend selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Recommend record);
+
+    int updateByPrimaryKey(Recommend record);
+    
+    List<Recommend> selectRcommendsTrim(Recommend record); 
+    
+    List<Recommend> getZanTopTen();
+}
