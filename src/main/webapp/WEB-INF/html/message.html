@@ -20,19 +20,30 @@
         	init(1);
             $('#send').click(function(){
             	var words=editor.txt.html();
-            	$.ajax({
-                    url: "intertMsg",
-                    type: 'POST',
-                    data:{
-                        "words": words,
-                        "userid": 2
-                    },
-                    dataType: 'json',
-                    cache: false,
-                    success: function(data){
-                    	alert(data.statu);
-                    }
-                })
+             	var aa=editor.txt.text().split("\"");
+             	if(aa[0]!=""){
+             		$.ajax({
+                        url: "intertMsg",
+                        type: 'POST',
+                        data:{
+                            "words": words,
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data){
+                        	if(data.statu==1){
+                           		alert("留言成功"); 
+                           		location.reload();
+                           	}else{
+                           		alert("留言失败"); 
+                           		location.reload();
+                           	}
+                        }
+                    })
+             	}else{
+             		alert("留言内容不能为空"); 
+             	}
+            	
                 
             });
         });
@@ -105,6 +116,17 @@
 	color: #f00;
 	text-decoration: underline
 }
+.input_submit1 {
+	background-color: #333;
+	color: #FFF;
+	margin-left: 5px;
+	width: 80px;
+	border: none;
+	cursor: pointer;
+	height: 28px;
+	line-height: 28px;
+	border-radius: 5px;
+}
 </style>
 </head>
 <body>
@@ -160,8 +182,10 @@
     <div class="jztop"></div>
     <div class="container">
         <div class="bloglist f_l">
-            <div id="editor" style="margin-top: 20px" ></div>
-            <input id="send" type="button" value="发送">
+            <div id="editor" style="margin-top: 20px;height: 120px;border: 2px solid #ccc;"></div>
+            <div style="width: 100%;height: 40px">
+            	<input id="send" class="input_submit1" type="button" value="发表留言" style="margin-left: 539px;margin-top: 10px">
+            </div>
             <div style="margin-top: 20px;margin-bottom: 10px"> <span style="font-size: 22px;">评论</span><hr style="background-color: #9A9A9A;height: 2px"/></div>
             <div id="1">
                 <div class="divcss5-4" style="float: left;margin-bottom: 10px" >
@@ -260,12 +284,7 @@
 <script type="text/javascript" src="js/wangEditor.js"></script>
 <script type="text/javascript">
     var E = window.wangEditor
-    var editor = new E('#editor')
-
-    // 或者 var editor = new E( document.getElementById('editor') )
-    editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
-    editor.customConfig.uploadImgServer = '/upload'  // 上传图片到服务器
-
+    var editor = new E('#aaaa','#editor')
     editor.create()
 </script>
 </html>

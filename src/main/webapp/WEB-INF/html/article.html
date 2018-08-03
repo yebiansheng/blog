@@ -19,6 +19,66 @@
      <script type="text/javascript">
      	$(function(){
     	 	init();
+    	 	$('#bianj').click(function(){
+    	 		var artID=GetRequest()[0];
+    	 		location.href="bianji?"+artID;
+    	 	});
+    		$('#addart').click(function(){
+    	 		var artID=GetRequest()[0];
+    	 		location.href="html";
+    	 	});
+    	 	
+    	 	$('#del').click(function(){
+    	 		var artID=GetRequest()[0].split("=")[1];
+    	 		$.ajax({
+                    url: "delByArtID",
+                    type: 'POST',
+                    data:{
+                        "artID": artID
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data){
+                    	if(data.statu==1){
+                       		alert("删除成功"); 
+                       		location.href="index";
+                       	}else{
+                       		alert("删除失败"); 
+                       		location.reload();
+                       	}
+                    }
+                })
+    	 	});
+    	 	 $('#send').click(function(){
+             	var words=editor.txt.html();
+             	var artID=GetRequest()[0].split("=")[1];
+             	var aa=editor.txt.text().split("\"");
+             	if(aa[0]!=""){
+             		$.ajax({
+                        url: "intertMsgByArtID",
+                        type: 'POST',
+                        data:{
+                            "words": words,
+                            "artID": artID
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data){
+                        	if(data.statu==1){
+                           		alert("留言成功"); 
+                           		location.reload();
+                           	}else{
+                           		alert("留言失败"); 
+                           		location.reload();
+                           	}
+                        }
+                    })
+             	}else{
+             		alert("留言内容不能为空"); 
+             	}
+             	
+                 
+             });
     	})  
     	function GetRequest() {
             var url = location.search; //获取url中"?"符后的字串   
@@ -193,6 +253,28 @@
 	color: #f00;
 	text-decoration: underline
 }
+.input_submit1 {
+	background-color: #333;
+	color: #FFF;
+	margin-left: 5px;
+	width: 80px;
+	border: none;
+	cursor: pointer;
+	height: 28px;
+	line-height: 28px;
+	border-radius: 5px;
+}
+.input_submit1 {
+	background-color: #333;
+	color: #FFF;
+	margin-left: 5px;
+	width: 80px;
+	border: none;
+	cursor: pointer;
+	height: 28px;
+	line-height: 28px;
+	border-radius: 5px;
+}
     </style>
 </head>
 <body>
@@ -246,6 +328,12 @@
     <div class="jztop"></div>
     <div class="container">
         <div class="bloglist f_l">
+        <div style="width: 100%;height: 50px">
+        	<input id="del" class="input_submit1" type="button" value="删除文章" style="float:right;margin-left: 10px;margin-top: 10px">
+        	<input id="bianj" class="input_submit1" type="button" value="编辑文章" style="float:right;margin-left: 10px;margin-top: 10px">
+            <input id="addart" class="input_submit1" type="button" value="添加新文章" style="float:right;margin-left: 10px;margin-top: 10px">
+        </div>
+            
             <h1 id="1" class="title">
                 
             </h1>
@@ -258,6 +346,14 @@
                 
             </div>
             <div id="6" style="margin-top: 20px;width: 100%;height: 60px;">喜欢   不喜欢</div>
+            
+            <hr style="background-color: #9A9A9A;height: 2px"/>
+            <div id="editor" style="margin-top: 20px;height: 120px;border: 2px solid #ccc;" ></div>
+            <div style="width: 100%;height: 40px">
+            	<input id="send" class="input_submit1" type="button" value="发表留言" style="margin-left: 539px;margin-top: 10px">
+            </div>
+            
+            
             <div style="margin-top: 20px;"> <span style="font-size: 22px;position: relative;top: 8px;">评论</span><hr style="background-color: #9A9A9A;height: 2px"/></div>
             <div id="4">
                 <div class="divcss5-4" style="float: left;margin-bottom: 10px" >
@@ -352,4 +448,10 @@
     </footer>
 </div>
 </body>
+<script type="text/javascript" src="js/wangEditor.js"></script>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var editor = new E('#AAA','#editor')
+    editor.create()
+</script>
 </html>

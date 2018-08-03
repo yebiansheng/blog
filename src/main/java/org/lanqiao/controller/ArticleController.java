@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.lanqiao.dao.ArticleMapper;
 import org.lanqiao.dao.MessageMapper;
 import org.lanqiao.entity.Article;
 import org.lanqiao.entity.Message;
@@ -37,7 +38,9 @@ public class ArticleController {
 	RecommendService recommendService;
 	@Autowired
 	MessageMapper dao;
-
+	@Autowired
+	ArticleMapper artdao;
+	
 	@RequestMapping("initIndex")
 	@ResponseBody
 	public void initIndex(HttpServletResponse response, String page, String title) {
@@ -172,7 +175,28 @@ public class ArticleController {
 			User user = new User();
 			user.setId(Integer.parseInt(user_id));
 			article.setUser(user);
+			article.setImage("images/01.jpg");
 			articleService.insertSelective(article);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", "成功");
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().print(jsonObject);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("updateArticle")
+	@ResponseBody
+	public void updateArticle(HttpServletResponse response, Article article,HttpSession session) {
+		try {
+			User user = new User();
+			int user_id = (int)session.getAttribute("userID");
+			user.setId(user_id);
+			article.setUser(user);
+			article.setImage("images/01.jpg");
+			artdao.updateByPrimaryKeySelective(article);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status", "成功");
 			response.setCharacterEncoding("utf-8");
@@ -211,17 +235,12 @@ public class ArticleController {
 		}
 	}
 
-	@RequestMapping("intertMsg")
+	
+	@RequestMapping("delByArtID")
 	@ResponseBody
-	public void intertMsg(HttpServletResponse response, Message msg, String userid) {
+	public void delByArtID(HttpServletResponse response,  String artID) {
 		try {
-			Date date = new Date();
-			User user = new User();
-			user.setId(Integer.parseInt(userid));
-			msg.setUser(user);
-			;
-			msg.setDate(date);
-			int i = dao.insertMsg(msg);
+			int i = artdao.deleteByPrimaryKey(Integer.parseInt(artID));
 
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("statu", i);
@@ -232,6 +251,9 @@ public class ArticleController {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 
 	@RequestMapping("upload")
 	@ResponseBody

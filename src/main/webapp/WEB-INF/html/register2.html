@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>注册</title>
+    <title>密码找回</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -69,26 +69,9 @@
 </head>
 <body>
 <div id='content' style="background-image: url('images/registerbg.jpg');background-size:cover; ">
-<form id="login_div" style='text-align: c' class="layui-form" action="insertUser">
-	<div style="width: 100%;text-align: center;margin-top: 40px;margin-bottom: 40px"><h1>注册</h1></div>
-    <div class="layui-form-item" style="">
-        <label class="layui-form-label">用户名：</label>
-        <div class="layui-input-inline" style="width:297px">
-            <input type="text" name="name" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-
-    
-
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">密码：</label>
-        <div class="layui-input-inline" style="width:297px">
-            <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
-        </div>
-       <!--  <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div> -->
-    </div>
-
+<form id="login_div" style='text-align: c' class="layui-form" action="xgmm">
+	<div style="width: 100%;text-align: center;margin-top: 40px;margin-bottom: 40px"><h1>密码找回</h1></div>
+   
 	<div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">邮箱：</label>
@@ -97,18 +80,19 @@
             </div>
         </div>
     </div>
-    <!-- <div class="layui-form-item">
-        <label class="layui-form-label">确认密码：</label>
-        <div class="layui-input-inline">
-            <input type="password" name="password" lay-verify="pass" placeholder="请输入确认密码" autocomplete="off" class="layui-input">
+	<div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">新密码：</label>
+            <div class="layui-input-inline" style="width:297px">
+                <input id="password" type="text" name="password"  placeholder="请输入密码" autocomplete="off" class="layui-input" >
+            </div>
         </div>
-        <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
-    </div> -->
-
+    </div>
+	
     <div class="layui-form-item">
         <label class="layui-form-label">验证码：</label>
         <div class="layui-input-inline" style="width:107px">
-            <input id="c" type="text" name="username" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
+            <input id="c" type="text" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
         </div>
         <div class="layui-input-inline">
             <input id="code" class="layui-btn layui-btn-primary" type="button" value="获取验证码"  style="width:180px"/>
@@ -118,7 +102,7 @@
     <div class="layui-form-item">
    	 	 <label class="layui-form-label"></label>
          <div class="layui-input-inline" style="width:297px">
-            <input class="layui-btn layui-btn-primary"  type="submit" style="width:297px" value="立即注册">
+            <button class="layui-btn layui-btn-primary"  type="submit" style="width:297px" >确认修改密码</button>
             <!-- <button type="reset" class="layui-btn layui-btn-primary" style="width:29%">重置</button> -->
         </div>
     </div>

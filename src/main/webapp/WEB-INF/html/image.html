@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>个人博客模板古典系列之――江南墨卷</title>
+    <meta name="keywords" content="个人博客模板古典系列之――江南墨卷" />
+    <meta name="description" content="个人博客模板古典系列之――江南墨卷" />
+    <link rel="icon" href="images/icon.ico" type="image/x-icon" />
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/modernizr.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function(){
+        	var imgUrl;
+            $("#btn_file").change(function(){
+            	var img = event.target.files[0];
+
+                // 判断是否图片
+                if(!img){
+                    return ;
+                }
+
+                // 判断图片格式
+                if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name)) ){
+                    alert('图片只能是jpg,gif,png');
+                    return ;
+                }
+
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+                reader.onload = function(e){
+                    var res = this.result;
+                    $("#showimg").attr("src", res);
+                    $("#zs").show();
+                    $("#sc").hide();
+                    $.ajax({
+                        url: 'uploadImg',
+                        type: 'POST',
+                        data:{
+                            "img":res
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data){
+                            imgUrl=data.imgUrl;
+                        }
+                    });
+                }
+            });
+            $('#cxsc').click(function(){
+            	$("#zs").hide();
+                $("#sc").show();
+            });
+            $('#qrsc').click(function(){
+        		$.ajax({
+                    url: "intertImg",
+                    type: 'POST',
+                    data:{
+                        "url": imgUrl,
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data){
+                    	if(data.statu==1){
+                       		alert("上传成功"); 
+                       		location.reload();
+                       	}else{
+                       		alert("上传失败"); 
+                       		location.reload();
+                       	}
+                    }
+                })
+            });
+        })
+                
+		function F_Open_dialog() {
+				document.getElementById("btn_file").click();
+		}
+				</script>
+<style type="text/css">
+.bor {
+	border: 3px dashed #9a9a9a;
+	width: 94%;
+	height: 400px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 25px;
+	margin-right: 25px;
+}
+.input_submit1 {
+	background-color: #333;
+	color: #FFF;
+	margin-left: 5px;
+	width: 180px;
+	border: none;
+	cursor: pointer;
+	height: 45px;
+	line-height: 28px;
+	border-radius: 5px;
+}
+</style>
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <div class="headtop"></div>
+        <div class="contenttop">
+            <div class="logo f_l" style="margin-left: -30px;margin-bottom: -20px;margin-top: -25px"><img src="images/title.png"/></div>
+            <div class="search f_r">
+                <form action="/e/search/index.php" method="post" name="searchform" id="searchform">
+                    <input name="keyboard" id="keyboard" class="input_text" value="请输入关键字" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字'}" type="text">
+                    <input name="show" value="title" type="hidden">
+                    <input name="tempid" value="1" type="hidden">
+                    <input name="tbname" value="news" type="hidden">
+                    <input name="Submit" class="input_submit" value="搜索" type="submit">
+                </form>
+            </div>
+            <div class="blank"></div>
+            <nav>
+                <div  class="navigation">
+                    <ul class="menu">
+                        <li><a href="index">网站首页</a></li>
+                        <li><a href="#">关于我</a>
+                            <ul>
+                                <li><a href="about">个人简介</a></li>
+                                <li><a href="listpic">个人相册</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">我的日记</a>
+                            <ul>
+                                <li><a href="newslistpic">个人日记</a></li>
+                                <li><a href="newslistpic">学习笔记</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="newslistpic">技术文章</a> </li>
+                        <li><a href="message">给我留言</a> </li>
+                    </ul>
+                </div>
+            </nav>
+            <SCRIPT type=text/javascript>
+                // Navigation Menu
+                $(function() {
+                    $(".menu ul").css({display: "none"}); // Opera Fix
+                    $(".menu li").hover(function(){
+                        $(this).find('ul:first').css({visibility: "visible",display: "none"}).slideDown("normal");
+                    },function(){
+                        $(this).find('ul:first').css({visibility: "hidden"});
+                    });
+                });
+            </SCRIPT>
+        </div>
+    </header>
+    <div class="container">
+        <div class="con_content">
+        	<div class="bor" id="sc">
+        		<img src="images/sahngchaun.png" style=" width: 130px;margin-left: 389px;margin-top: 50px;margin-bottom: -30px">
+        		<input  onclick="F_Open_dialog()" class="input_submit1" type="button" value="点击选择图片" style="margin-left: 369px;margin-top: 0px;font-size: 20px">
+        		<input type="file" id="btn_file" style="display:none">
+			</div> 
+			<div class="bor" id="zs" style=" display: none;">
+				<div style="width: 100%;height: 350px;">
+					<img id="showimg" src="images/sahngchaun.png" style="height: 330px;margin: 0 auto;padding-top: 10px">
+				</div>
+        		<div style="width: 100%;height: 50px">
+        			<input id="cxsc" class="input_submit1" type="button" value="重新选择" style="float:right;margin-top: 0px;font-size: 20px;margin-right: 20px">
+        			<input id="qrsc" class="input_submit1" type="button" value="确认上传" style="float:right;margin-top: 0px;font-size: 20px;">
+        		</div>
+			</div> 
+        </div>
+        <div class="blank"></div>
+        <!-- container代码 结束 -->
+
+        <footer>
+            <div class="footer">
+                <div class="f_l">
+                    <p>All Rights Reserved 版权所有：<a href="http://www.yangqq.com">叶汴生个人博客</a> 备案号：蜀ICP备00000000号</p>
+                </div>
+                <div class="f_r textr">
+                    <p>Design by DanceSmile</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+
+</html>

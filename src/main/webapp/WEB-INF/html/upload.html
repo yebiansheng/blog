@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="js/jquery.js"></script>
+    <title>使用html5 FileReader获取图片，并异步上传到服务器(not iframe)</title>
+    <style type="text/css">
+        body{margin: 0px; background:#f2f2f0;}
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            $("#img").change(function () {
+                var img = event.target.files[0];
+
+                // 判断是否图片
+                if(!img){
+                    return ;
+                }
+
+                // 判断图片格式
+                if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name)) ){
+                    alert('图片只能是jpg,gif,png');
+                    return ;
+                }
+
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+                reader.onload = function(e){
+                    var res = this.result;
+                    $("#showimg").attr("src", res);
+                    $.ajax({
+                        url: 'uploadImg',
+                        type: 'POST',
+                        data:{
+                            "img":res
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        success: function(data){
+                            var imgUrl=data.imgUrl;
+                            insert(imgUrl);
+
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+
+</head>
+
+<body>
+<p class="title">使用html5 FileReader获取图片，并异步上传到服务器(not iframe)</p>
+<p><input type="file" class="file" id="img"></p>
+<p class="showimg" id="showimg"></p>
+</body>
+</html>

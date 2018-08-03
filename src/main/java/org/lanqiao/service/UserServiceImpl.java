@@ -23,5 +23,15 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return dao.insertSelective(record);
 	}
+	@Override
+	public User getUserByEmail(String email) {
+		// TODO Auto-generated method stub
+		return dao.getUserByEmail(email);
+	}
+	@Override
+	public int updateByPrimaryKeySelective(User record) {
+		// TODO Auto-generated method stub
+		return dao.updateByPrimaryKeySelective(record);
+	}
 
 }

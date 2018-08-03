@@ -2,6 +2,7 @@ package org.lanqiao.controller;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -30,7 +31,7 @@ public class LoginController {
 		return "login";
 	}
 	@RequestMapping("logincheck")
-	public String logincheck(HttpServletRequest request,User user,HttpSession session){
+	public String logincheck(HttpServletRequest request,User user,HttpSession session,HttpServletResponse response,String mdl){
 		//request.getParameter("userName");
 		
 		String name=user.getName();
@@ -38,18 +39,33 @@ public class LoginController {
 		if(us==null){
 			 return "redirect:login";  
 		}
+	
 		if(user.getPassword().equals(us.getPassword())){
 			session.setAttribute("userName", us.getName());
 			session.setAttribute("userID", us.getId());
+			if("1".equals(mdl)){
+				 //创建Cookie对象  
+                Cookie cookie1=new Cookie("username","123");  
+                //设置有效时间  
+                cookie1.setMaxAge(60*60*24*10);  
+                //设置关联路径  
+                //cookie1.setPath(request.getContextPath());  
+                //cookie2.setPath(request.getContextPath());  
+                //发送Cookie给浏览器  
+                response.addCookie(cookie1);  
+			}
+				
+			
 			return "redirect:index";
 		}
+		
 		return "login";
 	}
 	
 	
 	@RequestMapping("code")
 	@ResponseBody
-	public void insertUser(HttpServletResponse response,String email){
+	public void code(HttpServletResponse response,String email){
 		//request.getParameter("userName");
 		try {
 			JSONObject jsonObject = new JSONObject();
@@ -80,16 +96,24 @@ public class LoginController {
 		}
 	}
 	@RequestMapping("insertUser")
-	@ResponseBody
 	public String insertUser(HttpServletRequest request,User user){
 		//request.getParameter("userName");
-		if(userService.getUserByName(user.getName())!=null){
-			
+		if(userService.getUserByName(user.getName())==null){
+			user.setHead_url("images/head/4.jpg");
+			userService.insertSelective(user);
+			return "register";
 		}
-		userService.insertSelective(user);
-		return "redirect:index";
+		return "login";
 	}
-	
+	@RequestMapping("xgmm")
+	public String xgmm(HttpServletRequest request,User user){
+		//request.getParameter("userName");
+		User uaer1=userService.getUserByEmail(user.getEmail());
+		uaer1.setPassword(user.getPassword());
+		userService.updateByPrimaryKeySelective(uaer1);
+		
+		return "login";
+	}
 	
 	@RequestMapping("register")
 	public String register(){
@@ -123,4 +147,22 @@ public class LoginController {
 	public String html(){
 		return "html";
 	}
+	@RequestMapping("register2")
+	public String register2(){
+		return "register2";
+	}
+	@RequestMapping("image")
+	public String image(){
+		return "image";
+	}
+	@RequestMapping("upload1")
+	public String upload1(){
+		return "upload";
+	}
+	@RequestMapping("bianji")
+	public String bianji(){
+		return "bianji";
+	}
+	
+	
 }

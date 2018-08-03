@@ -21,14 +21,15 @@
                 "top":($(window).height()- $('#login_div').height())/2+"px",
                 "left":($(window).width()- $('#login_div').width())/2+"px"
             })
+           
         })
-
+		
     </script>
 </head>
 <body>
     <div id="content"  style="background-image: url('images/registerbg.jpg');background-size:cover; ">
     <form method="post" action="logincheck"> 
-        <div id="login_div" >
+        <div id="login_div" style="height: 300px">
             <div class="layui-form-item" style="width: 300px;padding-top: 60px">
                 <label class="layui-form-label" style="color: white">用户名:</label>
                 <div class="layui-input-block">
@@ -42,9 +43,16 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label"  style="color: white"><input  type="checkbox" name="mdl" value="1" ></label>
+                <div class="layui-input-inline" style="color: white;position: relative;left: -10px;top: 6px">
+                   	十天免登录<a style="color: white;position: relative;left: 40px;" href="register2">忘记密码？</a>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label"  style="color: white"></label>
                 <div class="layui-input-inline">
-                    <button id="login" class="layui-btn layui-btn-normal" type="submit" name="submit" style="width: 100%">登录</button>
+                    <button id="login" class="layui-btn layui-btn-normal" type="submit" name="submit" style="width: 45%;position: relative;left: -20px">登录</button>
+                     <a class="layui-btn layui-btn-primary" href="register" target="_blank" style="width: 45%">去注册</a>
                 </div>
             </div>
         </div>

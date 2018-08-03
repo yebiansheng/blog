@@ -1,5 +1,6 @@
 package org.lanqiao.filter;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,13 +25,33 @@ public class LoginFilter implements HandlerInterceptor {
 		 
 		 
 		 
-		 HttpSession session=request.getSession();  
+		 /*HttpSession session=request.getSession();  
 		 String userName=(String) session.getAttribute("userName");
 		 if(userName!=null){
 			 response.setCharacterEncoding("utf-8");
 			 return true;
-		 }
-		
+		 }*/
+		 Cookie []cookies =request.getCookies();  
+	       /* String username=null;  
+	        String password=null;  */
+	        if(cookies!=null){  
+	        	 String username=cookies[0].getValue();
+	        	if(username!=null){
+	   			 response.setCharacterEncoding("utf-8");
+	   			 return true;
+	   		 	}
+	        	/*//±È¿˙Cookie  
+	            for(Cookie cookie:cookies){  
+	                 String cookieName=cookie.getName();  
+	                 String cookieValue=cookie.getValue();  
+	                if("username".equals(cookieName)){  
+	                    username=cookieValue;  
+	                }else if("password".equals(cookieName)){  
+	                    password=cookieValue;  
+	                }  
+	            }  */
+	              
+	        }  
 		 response.sendRedirect("login");
 		 
 		 return false;

@@ -19,6 +19,7 @@
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript">
         $(function(){
+        	init();
             $('#send').click(function(){
 				$('#wzbj').hide();
 				$('#title1').html($("#title").val());
@@ -32,24 +33,52 @@
 				
             });
             $('#save').click(function(){
+            	var artID=GetRequest()[0].split("=")[1];
                 $.ajax({
-                    url: 'insertArticle',
+                    url: 'updateArticle',
                     type: 'POST',
                     data:{
                         "title":$("#title").val(),
+                        "id":artID,
                     	"content":editor.txt.html(),
-                        "user_id":2,
                         "sort_id":2
                     },
                     dataType: 'json',
                     cache: false,
                     success: function(data){
                         alert(data.status);
-                        location.href ="index";
+                        location.href ="article?id="+artID;
                     }
                 });
             });
         })
+        function init(){
+        	var strs=GetRequest();
+     		var url="articleInit?"+strs[0];
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data){
+                	var article=data.list;
+                	$('#title').val(article.title);
+                	editor.txt.html(article.content)
+                }
+            })
+        };
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串   
+            var theRequest = new Object();
+            var strs=null;
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                /* for(var i = 0; i < strs.length; i ++) {
+                    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                } */
+            }
+            return strs;
+        }
     </script>
     <style type="text/css">
     	.input_submit1 {
@@ -65,7 +94,7 @@
 		}
 		        .divcss5-4{border-bottom:2px dashed #9A9A9A;width:100%}
         .divcss5-5{border-top:1px dashed #9A9A9A;border-bottom:1px dashed #9A9A9A;width:100%}
-                .bor {
+        .bor {
 	border: 3px dashed #9a9a9a;
 	width: 100%;
 	margin-top: 30px;
@@ -130,8 +159,8 @@
             <div class="about_box">
             	<div id="wzbj">
             		<h2 class="nh1"><span>您现在的位置是：<a href="/" target="_blank">网站首页</a>>><a href="#" target="_blank">发博文</a></span><b>发博文</b></h2>
-               		<span style="font-size:18px;color:black;margin-top: 10px;margin-left: 120px">标题：</span><input id="title" type="text" style="width:350px; height:25px;margin-top: 10px;"/>
-                	<span style="font-size:18px;color:black;margin-top: 10px;margin-left: 50px">文章类别：</span>
+               		<span style="font-size:20px;color:black;margin-top: 10px;margin-left: 120px">标题：</span><input id="title" type="text" style="width:350px; height:25px;margin-top: 10px;"/>
+                	<span style="font-size:20px;color:black;margin-top: 10px;margin-left: 50px">文章类别：</span>
                 	<select>
                 		<option value="1">日记</option>
                     	<option value="2">技术</option>

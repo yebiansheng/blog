@@ -18,6 +18,13 @@
         where name = #{name,jdbcType=VARCHAR}
   </select>
   
+  <select id="getUserByEmail" resultMap="UserResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where email = #{email,jdbcType=VARCHAR}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="UserResultMap">
     select 
     <include refid="Base_Column_List" />
